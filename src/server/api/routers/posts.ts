@@ -7,8 +7,8 @@ import z from "zod";
 const filterUserForClient = (user: User) => {
   return {
     id: user.id,
-    username: user.username,
-    profileImageUrl: user.profileImageUrl,
+    username: user.username ?? "SligerSaitPasParler",
+    imageUrl: user.imageUrl,
   };
 };
 
