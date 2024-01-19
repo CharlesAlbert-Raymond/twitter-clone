@@ -1,7 +1,12 @@
 import Head from "next/head";
-
+import type { RouterOutputs } from "@/utils/api";
 import { api } from "@/utils/api";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
+
+dayjs.extend(relativeTime);
 
 export default function Home() {
   const user = useUser();
@@ -25,19 +30,17 @@ export default function Home() {
       </Head>
       <main className="flex h-screen justify-center">
         <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
-          <div className="flex border-b border-slate-400">
+          <div className="flex border-b border-slate-400 p-4">
             {!user.isSignedIn && (
               <div className="flex justify-center">
                 <SignInButton />
               </div>
             )}
-            {!!user.isSignedIn && <SignOutButton />}
+            {!!user.isSignedIn && <CreatePostWizard />}
           </div>
           <div className="flex flex-col">
-            {data.map((post) => (
-              <div key={post.id} className="border-b border-slate-400 p-8">
-                <p>{post.content}</p>
-              </div>
+            {data.map((fullPost) => (
+              <PostView {...fullPost} key={fullPost.post.id} />
             ))}
           </div>
         </div>
@@ -45,3 +48,50 @@ export default function Home() {
     </>
   );
 }
+
+type PostWithUser = RouterOutputs["posts"]["getAll"][number];
+const PostView = (props: PostWithUser) => {
+  const { post, author } = props;
+  return (
+    <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
+      <Image
+        src={author.profileImageUrl}
+        className="rounded-full"
+        width={56}
+        height={56}
+        alt={`@${author.username}'s profile picture`}
+      />
+      <div className="flex flex-col">
+        <div className=" flex text-slate-200">
+          <span>{`@${author.username}`}&nbsp;</span>
+          <span className="font-thin">{`· ${dayjs(post.createdAt).fromNow()}`}</span>
+        </div>
+        <span>{post.content}</span>
+      </div>
+    </div>
+  );
+};
+
+const CreatePostWizard = () => {
+  const { user } = useUser();
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div className="flex w-full gap-3">
+      <Image
+        src={user.profileImageUrl}
+        className="rounded-full"
+        width={56}
+        height={56}
+        alt="Profile Image"
+      />
+      <input
+        placeholder="Type some emojis!"
+        className="grow bg-transparent outline-none"
+      />
+    </div>
+  );
+};
