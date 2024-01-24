@@ -71,7 +71,7 @@ const PostView = (props: PostWithUser) => {
     <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
       <Image
         src={author.imageUrl}
-        className="rounded-full"
+        className="aspect-square self-center rounded-full"
         width={56}
         height={56}
         alt={`@${author.username}'s profile picture`}
@@ -109,7 +109,7 @@ const CreatePostWizard = () => {
     <div className="flex w-full gap-3">
       <Image
         src={user.imageUrl}
-        className="rounded-full"
+        className="aspect-square rounded-full"
         width={56}
         height={56}
         alt="Profile Image"

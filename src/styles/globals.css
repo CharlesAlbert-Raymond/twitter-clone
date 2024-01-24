@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 body {
-    @apply bg-black text-slate-100 font-sans;
+    @apply bg-black text-slate-100;
+    font-family: 'Open Sans', sans-serif;
 }

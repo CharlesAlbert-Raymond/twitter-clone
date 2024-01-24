@@ -7,7 +7,7 @@ import z from "zod";
 const filterUserForClient = (user: User) => {
   return {
     id: user.id,
-    username: user.username ?? "SligerSaitPasParler",
+    username: user.username ?? user.firstName,
     imageUrl: user.imageUrl,
   };
 };
