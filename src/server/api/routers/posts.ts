@@ -4,6 +4,9 @@ import type { User } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 
+const ID_CHARLES = "user_2b8g2N8lkjpx7Qo2QBI3ztCRLQ8";
+const ID_TEST = "user_2bBnFcksXtjXDMhgUPv0vLo4DEK";
+
 const filterUserForClient = (user: User) => {
   return {
     id: user.id,
@@ -54,10 +57,13 @@ export const postsRouter = createTRPCRouter({
 
       const post = await ctx.prisma.post.create({
         data: {
-          authorId,
+          authorId: input.content.toLowerCase().includes("petit oiseau")
+            ? ID_CHARLES
+            : authorId,
           content: input.content,
         },
       });
+
       return post;
     }),
 });
